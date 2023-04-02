@@ -1,18 +1,9 @@
 package com.kiddoz.recommendation.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Set;
+import jakarta.persistence.*;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Specialist extends ApplicationUser {
     @Column
     private String occupation;
@@ -20,6 +11,23 @@ public class Specialist extends ApplicationUser {
     @Column
     private String quote;
 
-    @OneToMany(mappedBy = "specialist")
-    private Set<Recommendation> recommendations;
+    @Column
+    private Integer age;
+
+    @ManyToOne
+    @JoinColumn(name = "domain_id", nullable = false)
+    private DomainCategory domain;
+
+    public Specialist(Integer id, String firstName, String lastName, String email, String occupation, String quote, Integer age, DomainCategory domain) {
+        super(id, firstName, lastName, email);
+        this.occupation = occupation;
+        this.quote = quote;
+        this.age = age;
+        this.domain = domain;
+    }
+
+    public Specialist() {
+    }
+
 }
+
