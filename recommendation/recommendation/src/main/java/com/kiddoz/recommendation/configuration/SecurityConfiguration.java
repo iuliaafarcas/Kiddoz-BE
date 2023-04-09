@@ -12,8 +12,9 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable().authorizeHttpRequests(
-                authorize -> authorize.requestMatchers("/parents", "/parents/*").permitAll()
-        ).build();
+        return http.cors().disable()
+                .csrf().disable().authorizeHttpRequests(
+                        authorize -> authorize.requestMatchers("/**").permitAll()
+                ).build();
     }
 }

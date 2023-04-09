@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RatingSpecialist {
+public class RatingRecommendation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "specialist_id", nullable = false)
-    private Specialist specialist;
+    @JoinColumn(name = "recommendation_id", nullable = false)
+    private Recommendation recommendation;
 
     @ManyToOne
     @JoinColumn(name = "parent_id", nullable = false)
@@ -24,6 +24,4 @@ public class RatingSpecialist {
 
     @Column
     private Integer noStars;
-
-
 }

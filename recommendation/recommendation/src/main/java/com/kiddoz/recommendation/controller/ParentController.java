@@ -22,6 +22,12 @@ public class ParentController {
                 parentAddDto.getEmail());
     }
 
+    @PutMapping()
+    public Parent updateParent(@RequestBody Parent parent) {
+        return parentService.updateParent(parent.getId(), parent.getFirstName(), parent.getLastName(),
+                parent.getEmail());
+    }
+
     @GetMapping()
     public List<Parent> getParents() {
         return parentService.getParents();

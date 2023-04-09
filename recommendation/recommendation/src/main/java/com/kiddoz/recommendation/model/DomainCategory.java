@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
 @Entity
 @Data
 @AllArgsConstructor
@@ -19,6 +17,4 @@ public class DomainCategory {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "domain")
-    private Set<Specialist> specialists;
 }

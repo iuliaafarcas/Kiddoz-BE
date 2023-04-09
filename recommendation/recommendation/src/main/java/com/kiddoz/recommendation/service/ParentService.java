@@ -22,11 +22,23 @@ public class ParentService {
     }
 
     public void deleteParent(Integer id) {
-        //TODO
+        //TODO: delete all reg parent first
+//        applicationUserRepository.deleteById(id);
     }
 
-    public void updateParent(Integer id, String firstName, String lastName, String email) {
-        //TODO
+    public Parent updateParent(Integer id, String firstName, String lastName, String email) {
+        var newParent = applicationUserRepository.findById(id).stream()
+                .filter(parent -> parent instanceof Parent)
+                .map(parent -> (Parent) parent).toList();
+        if (newParent.isEmpty()) return null;
+        else {
+            newParent.get(0).setFirstName(firstName);
+            newParent.get(0).setLastName(lastName);
+            newParent.get(0).setEmail(email);
+            return applicationUserRepository.save(newParent.get(0));
+
+        }
+
     }
 
     public List<Parent> getParents() {
