@@ -58,4 +58,10 @@ public class RecommendationService {
         return this.recommendationRepository.findAll();
     }
 
+    public Recommendation getRecommendationById(Integer id) {
+        var recommendation = recommendationRepository.findById(id).orElseThrow(() -> new RuntimeException("Recommendation not found -> getSpecialistById"));
+        if (recommendation instanceof Recommendation) return (Recommendation) recommendation;
+        else throw new RuntimeException("Recommendation not found");
+    }
+
 }

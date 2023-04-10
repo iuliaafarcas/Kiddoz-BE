@@ -1,7 +1,13 @@
 package com.kiddoz.recommendation.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Specialist extends ApplicationUser {
@@ -20,60 +26,22 @@ public class Specialist extends ApplicationUser {
     @Column
     private String description;
 
+    @Column
+    private String domainOfActivities;
+
     @ManyToOne
     @JoinColumn(name = "domain_id", nullable = false)
     private DomainCategory domain;
 
-    public Specialist(Integer id, String firstName, String lastName, String email, String occupation, String quote, Integer age, DomainCategory domain, String image) {
+    public Specialist(Integer id, String firstName, String lastName, String email, String description, String occupation, String quote, Integer age, DomainCategory domain, String image, String domainOfActivities) {
         super(id, firstName, lastName, email);
+        this.description = description;
         this.occupation = occupation;
         this.quote = quote;
         this.age = age;
         this.domain = domain;
         this.image = image;
-    }
-
-    public Specialist() {
-    }
-
-    public String getOccupation() {
-        return occupation;
-    }
-
-    public void setOccupation(String occupation) {
-        this.occupation = occupation;
-    }
-
-    public String getQuote() {
-        return quote;
-    }
-
-    public void setQuote(String quote) {
-        this.quote = quote;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public DomainCategory getDomain() {
-        return domain;
-    }
-
-    public void setDomain(DomainCategory domain) {
-        this.domain = domain;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
+        this.domainOfActivities = domainOfActivities;
     }
 }
 

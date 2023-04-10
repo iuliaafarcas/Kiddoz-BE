@@ -21,10 +21,10 @@ public class SpecialistService {
         this.domainCategoryRepository = domainCategoryRepository;
     }
 
-    public Specialist addSpecialist(String firstName, String lastName, String email, String occupation, String quote, Integer age, Integer domainId, String image) {
+    public Specialist addSpecialist(String firstName, String lastName, String email, String description, String occupation, String quote, Integer age, Integer domainId, String image, String domainsOfActivity) {
         var domainCategory = domainCategoryRepository.findById(domainId).orElseThrow(() -> new RuntimeException("Domain not found"));
-        Specialist newSpecialist = new Specialist(null, firstName, lastName, email, occupation, quote, age,
-                domainCategory, image);
+        Specialist newSpecialist = new Specialist(null, firstName, lastName, email, description, occupation, quote, age,
+                domainCategory, image, domainsOfActivity);
 
         return applicationUserRepository.save(newSpecialist);
     }

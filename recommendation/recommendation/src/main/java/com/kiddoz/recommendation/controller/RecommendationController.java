@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("recommendations")
 public class RecommendationController {
@@ -27,6 +28,11 @@ public class RecommendationController {
     @GetMapping
     public List<Recommendation> getRecommendations() {
         return recommendationService.getRecommendations();
+    }
+
+    @GetMapping("/{id}")
+    public Recommendation getRecommendationById(@PathVariable(value = "id") Integer id) {
+        return recommendationService.getRecommendationById(id);
     }
 
 }

@@ -2,7 +2,6 @@ package com.kiddoz.recommendation.controller;
 
 import com.kiddoz.recommendation.dto.SpecialistAddDto;
 import com.kiddoz.recommendation.model.Specialist;
-import com.kiddoz.recommendation.service.DomainCategoryService;
 import com.kiddoz.recommendation.service.SpecialistService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,7 @@ public class SpecialistController {
     private final SpecialistService specialistService;
 
 
-    public SpecialistController(SpecialistService specialistService, DomainCategoryService domainCategoryService) {
+    public SpecialistController(SpecialistService specialistService) {
         this.specialistService = specialistService;
 
     }
@@ -23,8 +22,8 @@ public class SpecialistController {
     @PostMapping()
     public Specialist addSpecialist(@RequestBody SpecialistAddDto specialistAddDto) {
         return specialistService.addSpecialist(specialistAddDto.getFirstName(), specialistAddDto.getLastName(),
-                specialistAddDto.getEmail(), specialistAddDto.getOccupation(), specialistAddDto.getQuote(), specialistAddDto.getAge(),
-                specialistAddDto.getDomainId(), specialistAddDto.getImage());
+                specialistAddDto.getEmail(), specialistAddDto.getDescription(), specialistAddDto.getOccupation(), specialistAddDto.getQuote(), specialistAddDto.getAge(),
+                specialistAddDto.getDomainId(), specialistAddDto.getImage(), specialistAddDto.getDomainsOfActivity());
     }
 
     @GetMapping
