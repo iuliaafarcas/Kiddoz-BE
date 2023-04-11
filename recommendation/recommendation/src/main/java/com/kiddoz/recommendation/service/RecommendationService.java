@@ -4,6 +4,8 @@ import com.kiddoz.recommendation.model.*;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.BenefitRepository;
 import com.kiddoz.recommendation.repository.RecommendationRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,8 +62,13 @@ public class RecommendationService {
 
     public Recommendation getRecommendationById(Integer id) {
         var recommendation = recommendationRepository.findById(id).orElseThrow(() -> new RuntimeException("Recommendation not found -> getSpecialistById"));
-        if (recommendation instanceof Recommendation) return (Recommendation) recommendation;
+        if (recommendation != null) return (Recommendation) recommendation;
         else throw new RuntimeException("Recommendation not found");
+    }
+
+    public List<Recommendation> getRecommendationsPaged(Integer itemCount, Integer pageNumber) {
+        Pageable page = PageRequest.of(pageNumber, itemCount);
+        return recommendationRepository.findAll(page).stream().toList();
     }
 
 }

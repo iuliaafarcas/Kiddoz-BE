@@ -35,4 +35,12 @@ public class RecommendationController {
         return recommendationService.getRecommendationById(id);
     }
 
+    @GetMapping("/paged")
+    public List<Recommendation> getRecommendationPaged(@RequestParam(required = false, defaultValue = "10") Integer
+                                                               itemCount,
+                                                       @RequestParam Integer pageNumber) {
+        return recommendationService.getRecommendationsPaged(itemCount, pageNumber);
+    }
+
+
 }
