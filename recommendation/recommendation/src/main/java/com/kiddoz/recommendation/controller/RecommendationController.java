@@ -36,10 +36,15 @@ public class RecommendationController {
     }
 
     @GetMapping("/paged")
-    public List<Recommendation> getRecommendationPaged(@RequestParam(required = false, defaultValue = "10") Integer
-                                                               itemCount,
-                                                       @RequestParam Integer pageNumber) {
+    public List<Object> getRecommendationPaged(@RequestParam(required = false, defaultValue = "10") Integer
+                                                       itemCount,
+                                               @RequestParam Integer pageNumber) {
         return recommendationService.getRecommendationsPaged(itemCount, pageNumber);
+    }
+
+    @GetMapping("/otherRecommendations/{id}")
+    public List<Recommendation> getTopSimilarRecommendations(@PathVariable(value = "id") Integer id) {
+        return recommendationService.getTopSimilarRecommendations(id);
     }
 
 
