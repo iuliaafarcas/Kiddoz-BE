@@ -36,5 +36,12 @@ public class SpecialistController {
         return specialistService.getSpecialistById(id);
     }
 
+    @GetMapping("/paged")
+    public List<Object> getSpecialistsPaged(@RequestParam(required = false, defaultValue = "10") Integer
+                                                    itemCount,
+                                            @RequestParam Integer pageNumber) {
+        return specialistService.getSpecialistsPaged(itemCount, pageNumber);
+    }
+
 
 }

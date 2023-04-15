@@ -1,10 +1,14 @@
 package com.kiddoz.recommendation.service;
 
+import com.kiddoz.recommendation.model.ApplicationUser;
 import com.kiddoz.recommendation.model.Specialist;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.DomainCategoryRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,5 +44,14 @@ public class SpecialistService {
         var specialist = applicationUserRepository.findById(id).orElseThrow(() -> new RuntimeException("Specialist not found -> getSpecialistById"));
         if (specialist instanceof Specialist) return (Specialist) specialist;
         else throw new RuntimeException("Specialist not found");
+    }
+
+    public List<Object> getSpecialistsPaged(Integer itemCount, Integer pageNumber) {
+        Pageable page = PageRequest.of(pageNumber - 1, itemCount);
+        List<Object> result = new ArrayList();
+        List<ApplicationUser> list_ = applicationUserRepository.findAll(page).stream().filter(element -> element instanceof Specialist).collect(Collectors.toList());
+        result.add(applicationUserRepository.findAll().size());
+        result.add(list_);
+        return result;
     }
 }

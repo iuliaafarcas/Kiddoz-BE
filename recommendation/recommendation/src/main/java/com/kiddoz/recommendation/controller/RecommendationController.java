@@ -47,5 +47,15 @@ public class RecommendationController {
         return recommendationService.getTopSimilarRecommendations(id);
     }
 
+    //    @GetMapping("/filterRecommendationsByType")
+//    public List<Recommendation> filterRecommendationsByType(@RequestBody TypeFilterDto typeFilterDto) {
+//        return recommendationService.filterRecommendationsByType(typeFilterDto.getRecommendations(),
+//                typeFilterDto.getTypes());
+//    }
+    @GetMapping("/getRecommendationsBySpecialist/{id}")
+    public List<Recommendation> getRecommendationsBySpecialist(@PathVariable(value = "id") Integer id) {
+        return this.recommendationService.getRecommendationsBySpecialist(id);
+    }
+
 
 }

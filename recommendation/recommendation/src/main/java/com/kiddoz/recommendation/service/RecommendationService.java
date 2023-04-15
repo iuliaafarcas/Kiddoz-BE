@@ -113,4 +113,15 @@ public class RecommendationService {
                 .collect(Collectors.toList());
     }
 
+//    public List<Recommendation> filterRecommendationsByType(List<Recommendation> recommendations, List<RecommendationType> types) {
+//        return recommendations.stream().filter(element -> types.contains(element.getType())).toList();
+//
+//    }
+
+    public List<Recommendation> getRecommendationsBySpecialist(Integer id) {
+        return this.recommendationRepository.findAll().stream().filter(element -> element.getSpecialist().getId().equals(id)).
+                collect(Collectors.toList());
+    }
+
+
 }
