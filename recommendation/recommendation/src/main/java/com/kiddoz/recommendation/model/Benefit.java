@@ -1,5 +1,6 @@
 package com.kiddoz.recommendation.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class Benefit {
     @Column
     private String name;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "benefits")
+    @JsonBackReference
     private List<Recommendation> recommendations;
 }
