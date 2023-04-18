@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("ratingRecommendations")
 public class RatingRecommendationController {
@@ -18,12 +19,17 @@ public class RatingRecommendationController {
 
     @PostMapping()
     public RatingRecommendation addRatingRecommendation(@RequestBody RatingRecommendationAddDto ratingAddDto) {
-        return ratingRecommendationService.addRatingRecommendation(ratingAddDto.getRecommendation().getId(), ratingAddDto.getParent().getId(), ratingAddDto.getNoStars());
+        return ratingRecommendationService.addRatingRecommendation(ratingAddDto.getRecommendationId(), ratingAddDto.getParentId(), ratingAddDto.getNoStars());
     }
 
     @GetMapping()
     public List<RatingRecommendation> getRatingRecommendations() {
         return ratingRecommendationService.getRecommendations();
+    }
+
+    @GetMapping("/{id}")
+    public Float getRatingForRecommendation(@PathVariable Integer id) {
+        return this.ratingRecommendationService.getRatingForRecommendation(id);
     }
 
 }

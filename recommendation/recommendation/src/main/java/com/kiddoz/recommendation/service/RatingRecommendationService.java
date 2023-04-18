@@ -9,6 +9,7 @@ import com.kiddoz.recommendation.repository.RecommendationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RatingRecommendationService {
@@ -26,13 +27,42 @@ public class RatingRecommendationService {
         var recommendation = recommendationRepository.findById(recommendationId).orElseThrow(() -> new RuntimeException("Recommendation not found. Rating for R not added!"));
         var parent = applicationUserRepository.findById(parentId).orElseThrow(() -> new RuntimeException("User not found. Rating for R not added!"));
         if (parent instanceof Parent) {
-            RatingRecommendation ratingRecommendation = new RatingRecommendation(null, recommendation, (Parent) parent, noStars);
-            return this.ratingRecommendationRepository.save(ratingRecommendation);
+            if (existsRecommendationRating(recommendationId, parentId) != null) {
+                RatingRecommendation oldRating = existsRecommendationRating(recommendationId, parentId);
+                oldRating.setNoStars(noStars);
+                return this.ratingRecommendationRepository.save(oldRating);
+            } else {
+                RatingRecommendation ratingRecommendation = new RatingRecommendation(null, recommendation, (Parent) parent, noStars);
+                return this.ratingRecommendationRepository.save(ratingRecommendation);
+            }
         } else throw new RuntimeException("Specialists cannot add a rating");
+    }
 
+    public RatingRecommendation existsRecommendationRating(Integer recommendationId, Integer parentId) {
+        for (RatingRecommendation rating : ratingRecommendationRepository.findAll()) {
+            if (Objects.equals(rating.getParent().getId(), parentId) && Objects.equals(rating.getRecommendation().getId(), recommendationId))
+                return rating;
+        }
+        return null;
     }
 
     public List<RatingRecommendation> getRecommendations() {
         return this.ratingRecommendationRepository.findAll();
+    }
+
+    public Float getRatingForRecommendation(Integer id) {
+        Float sum = 0f;
+        int count = 0;
+        for (RatingRecommendation rating : this.getRecommendations()) {
+            if (Objects.equals(rating.getRecommendation().getId(), id)) {
+                sum += rating.getNoStars();
+                count++;
+            }
+        }
+        if (count == 0) {
+            return 0f; // No ratings for this recommendation
+        } else {
+            return sum / count; // Compute average rating
+        }
     }
 }

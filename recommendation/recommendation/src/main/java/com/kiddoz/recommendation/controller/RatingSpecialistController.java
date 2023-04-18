@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("ratingSpecialists")
 public class RatingSpecialistController {
@@ -25,6 +26,11 @@ public class RatingSpecialistController {
     @GetMapping
     public List<RatingSpecialist> getRatingSpecialist() {
         return this.ratingSpecialistService.getRatingSpecialists();
+    }
+
+    @GetMapping("/{id}")
+    public Float getRatingForSpecialist(@PathVariable Integer id) {
+        return this.ratingSpecialistService.getRatingForSpecialist(id);
     }
 
 }

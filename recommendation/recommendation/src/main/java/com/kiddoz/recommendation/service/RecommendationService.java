@@ -113,15 +113,24 @@ public class RecommendationService {
                 .collect(Collectors.toList());
     }
 
-//    public List<Recommendation> filterRecommendationsByType(List<Recommendation> recommendations, List<RecommendationType> types) {
-//        return recommendations.stream().filter(element -> types.contains(element.getType())).toList();
-//
-//    }
 
     public List<Recommendation> getRecommendationsBySpecialist(Integer id) {
         return this.recommendationRepository.findAll().stream().filter(element -> element.getSpecialist().getId().equals(id)).
                 collect(Collectors.toList());
     }
 
+    public List<Object> searchRecommendations(int itemCount, int pageNumber, String searchQuery) {
+        Pageable page = PageRequest.of(pageNumber - 1, itemCount);
+        List<Recommendation> searchResults = recommendationRepository.findAll(page).stream()
+                .filter(recommendation -> recommendation.getTitle().toLowerCase().contains(searchQuery.toLowerCase()))
+                .toList();
+        long totalResults = recommendationRepository.findAll().stream().filter(recommendation -> recommendation.getTitle().toLowerCase()
+                .contains(searchQuery.toLowerCase())).count();
+
+        List<Object> result = new ArrayList<>();
+        result.add(totalResults);
+        result.add(searchResults);
+        return result;
+    }
 
 }

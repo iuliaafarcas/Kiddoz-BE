@@ -1,7 +1,5 @@
 package com.kiddoz.recommendation.dto;
 
-import com.kiddoz.recommendation.model.Parent;
-import com.kiddoz.recommendation.model.Recommendation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RatingRecommendationAddDto {
-    private Recommendation recommendation;
-    private Parent parent;
+    private Integer recommendationId;
+    private Integer parentId;
     private Integer noStars;
 }

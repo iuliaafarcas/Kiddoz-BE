@@ -36,7 +36,7 @@ public class RecommendationController {
     }
 
     @GetMapping("/paged")
-    public List<Object> getRecommendationPaged(@RequestParam(required = false, defaultValue = "10") Integer
+    public List<Object> getRecommendationPaged(@RequestParam(required = false, defaultValue = "1") Integer
                                                        itemCount,
                                                @RequestParam Integer pageNumber) {
         return recommendationService.getRecommendationsPaged(itemCount, pageNumber);
@@ -47,14 +47,16 @@ public class RecommendationController {
         return recommendationService.getTopSimilarRecommendations(id);
     }
 
-    //    @GetMapping("/filterRecommendationsByType")
-//    public List<Recommendation> filterRecommendationsByType(@RequestBody TypeFilterDto typeFilterDto) {
-//        return recommendationService.filterRecommendationsByType(typeFilterDto.getRecommendations(),
-//                typeFilterDto.getTypes());
-//    }
     @GetMapping("/getRecommendationsBySpecialist/{id}")
     public List<Recommendation> getRecommendationsBySpecialist(@PathVariable(value = "id") Integer id) {
         return this.recommendationService.getRecommendationsBySpecialist(id);
+    }
+
+    @GetMapping("/getRecommendationsByTitle")
+    public List<Object> getRecommendationsByTitle(@RequestParam(required = false, defaultValue = "1") Integer
+                                                          itemCount,
+                                                  @RequestParam Integer pageNumber, @RequestParam String title) {
+        return this.recommendationService.searchRecommendations(itemCount, pageNumber, title);
     }
 
 
