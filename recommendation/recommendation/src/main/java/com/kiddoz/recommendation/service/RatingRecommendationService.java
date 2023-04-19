@@ -51,18 +51,6 @@ public class RatingRecommendationService {
     }
 
     public Float getRatingForRecommendation(Integer id) {
-        Float sum = 0f;
-        int count = 0;
-        for (RatingRecommendation rating : this.getRecommendations()) {
-            if (Objects.equals(rating.getRecommendation().getId(), id)) {
-                sum += rating.getNoStars();
-                count++;
-            }
-        }
-        if (count == 0) {
-            return 0f; // No ratings for this recommendation
-        } else {
-            return sum / count; // Compute average rating
-        }
+        return this.ratingRecommendationRepository.getRatingForRecommendation(id);
     }
 }

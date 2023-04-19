@@ -5,6 +5,7 @@ import com.kiddoz.recommendation.model.Recommendation;
 import com.kiddoz.recommendation.service.RecommendationService;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @CrossOrigin
@@ -36,7 +37,7 @@ public class RecommendationController {
     }
 
     @GetMapping("/paged")
-    public List<Object> getRecommendationPaged(@RequestParam(required = false, defaultValue = "1") Integer
+    public List<Object> getRecommendationPaged(@RequestParam(required = false, defaultValue = "10") Integer
                                                        itemCount,
                                                @RequestParam Integer pageNumber) {
         return recommendationService.getRecommendationsPaged(itemCount, pageNumber);
@@ -53,11 +54,39 @@ public class RecommendationController {
     }
 
     @GetMapping("/getRecommendationsByTitle")
-    public List<Object> getRecommendationsByTitle(@RequestParam(required = false, defaultValue = "1") Integer
+    public List<Object> getRecommendationsByTitle(@RequestParam(required = false, defaultValue = "10") Integer
                                                           itemCount,
                                                   @RequestParam Integer pageNumber, @RequestParam String title) {
         return this.recommendationService.searchRecommendations(itemCount, pageNumber, title);
     }
 
+    @GetMapping("/filter/type")
+    public List<Recommendation> filterRecommendationByTypes(@RequestParam(required = false) String types) {
+
+        return this.recommendationService.filterRecommendationByTypes(Arrays.stream(types.split(","))
+                .map(Integer::parseInt)
+                .toList());
+    }
+
+    @GetMapping("/filter/age")
+    public List<Recommendation> filterRecommendationByAge(@RequestParam(required = false) Integer fromAge,
+                                                          @RequestParam(required = false) Integer fromUnitAge) {
+
+        return this.recommendationService.filterRecommendationByAge(fromAge, fromUnitAge);
+    }
+
+    @GetMapping("/filter")
+    public List<Object> filterRecommendation(@RequestParam(required = false, defaultValue = "10") Integer itemCount,
+                                             @RequestParam Integer pageNumber,
+                                             @RequestParam(required = false) String types,
+                                             @RequestParam(required = false) Integer fromAge,
+                                             @RequestParam(required = false) Integer fromUnitAge,
+                                             @RequestParam(required = false) Integer starCount,
+                                             @RequestParam(required = false) String title) {
+
+        return this.recommendationService.filter(itemCount, pageNumber,
+                types != null ? Arrays.stream(types.split(",")).map(Integer::parseInt).toList() : null,
+                fromAge, fromUnitAge, starCount, title);
+    }
 
 }

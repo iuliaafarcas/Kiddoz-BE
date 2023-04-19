@@ -3,9 +3,12 @@ package com.kiddoz.recommendation.service;
 import com.kiddoz.recommendation.model.*;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.BenefitRepository;
+import com.kiddoz.recommendation.repository.RatingRecommendationRepository;
 import com.kiddoz.recommendation.repository.RecommendationRepository;
+import com.kiddoz.recommendation.utils.RecommendationSpecifications;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,10 +20,17 @@ public class RecommendationService {
     private final ApplicationUserRepository userRepository;
     private final BenefitRepository benefitRepository;
 
-    public RecommendationService(RecommendationRepository recommendationRepository, ApplicationUserRepository userRepository, BenefitRepository benefitRepository) {
+    private final RatingRecommendationRepository ratingRecommendationRepository;
+
+
+    public RecommendationService(RecommendationRepository recommendationRepository,
+                                 ApplicationUserRepository userRepository,
+                                 BenefitRepository benefitRepository,
+                                 RatingRecommendationRepository ratingRecommendationRepository) {
         this.recommendationRepository = recommendationRepository;
         this.userRepository = userRepository;
         this.benefitRepository = benefitRepository;
+        this.ratingRecommendationRepository = ratingRecommendationRepository;
     }
 
     public Recommendation addRecommendation(String title, String description, Integer fromAge, String fromUnitAge,
@@ -56,10 +66,6 @@ public class RecommendationService {
                 toAgeUnit, recommendationType, image, (Specialist) specialist, listOfBenefits);
 
         Recommendation recc = recommendationRepository.save(newRecommendation);
-//        for (var benefit : listOfBenefits) {
-//            benefit.getRecommendations().add(recc);
-//            benefitRepository.save(benefit);
-//        }
         return recc;
     }
 
@@ -121,11 +127,11 @@ public class RecommendationService {
 
     public List<Object> searchRecommendations(int itemCount, int pageNumber, String searchQuery) {
         Pageable page = PageRequest.of(pageNumber - 1, itemCount);
-        List<Recommendation> searchResults = recommendationRepository.findAll(page).stream()
-                .filter(recommendation -> recommendation.getTitle().toLowerCase().contains(searchQuery.toLowerCase()))
-                .toList();
-        long totalResults = recommendationRepository.findAll().stream().filter(recommendation -> recommendation.getTitle().toLowerCase()
-                .contains(searchQuery.toLowerCase())).count();
+        List<Recommendation> searchResults = recommendationRepository.findAll().stream().filter(recommendation -> recommendation.getTitle().toLowerCase().contains(searchQuery.toLowerCase()))
+                .toList().subList((pageNumber - 1) * itemCount, pageNumber * itemCount);
+        long totalResults = recommendationRepository.findAll().stream()
+                .filter(recommendation -> recommendation.getTitle().toLowerCase()
+                        .contains(searchQuery.toLowerCase())).count();
 
         List<Object> result = new ArrayList<>();
         result.add(totalResults);
@@ -133,4 +139,51 @@ public class RecommendationService {
         return result;
     }
 
+    public List<Recommendation> filterRecommendationByTypes(List<Integer> types) {
+        return this.recommendationRepository.findAll(RecommendationSpecifications.typeIn(types));
+    }
+
+    public List<Recommendation> filterRecommendationByAge(Integer fromAge, Integer fromUnitAge) {
+        return this.recommendationRepository.findAll(RecommendationSpecifications.ageBetween(fromAge, fromUnitAge));
+    }
+
+
+    public List<Object> filter(Integer itemCount, Integer pageNumber, List<Integer> types, Integer fromAge, Integer fromUnitAge, Integer starNumber,
+                               String title) {
+        List<Object> finalList = new ArrayList<>();
+        List<Specification<Recommendation>> predicates = new ArrayList<>();
+        if (types != null) predicates.add(RecommendationSpecifications.typeIn(types));
+        if (title != null) predicates.add(RecommendationSpecifications.titleIn(title));
+        if (fromAge != null && fromUnitAge != null)
+            predicates.add(RecommendationSpecifications.ageBetween(fromAge, fromUnitAge));
+        Specification<Recommendation> specRecommendation = null;
+        for (var next : predicates) {
+            if (specRecommendation == null) {
+                specRecommendation = next;
+            } else {
+                specRecommendation = specRecommendation.and(next);
+            }
+        }
+        List<Recommendation> resultList;
+        if (specRecommendation == null) resultList = this.recommendationRepository.findAll();
+        else resultList = this.recommendationRepository.findAll(specRecommendation);
+
+        if (starNumber == null) {
+            int fromIndex = Math.min((pageNumber - 1) * itemCount, resultList.size());
+            int toIndex = Math.min(pageNumber * itemCount, resultList.size());
+            finalList.add(resultList.subList(fromIndex, toIndex).size());
+            finalList.add(resultList.subList(fromIndex, toIndex));
+        } else {
+            List<Recommendation> list_ = resultList.stream().filter(element -> Math.round(ratingRecommendationRepository
+                    .getRatingForRecommendation(element.getId())) >= starNumber).collect(Collectors.toList());
+            int fromIndex = Math.min((pageNumber - 1) * itemCount, list_.size());
+            int toIndex = Math.min(pageNumber * itemCount, list_.size());
+            finalList.add(list_.subList(fromIndex, toIndex).size());
+            finalList.add(list_.subList(fromIndex, toIndex));
+        }
+        return finalList;
+    }
 }
+
+
+
