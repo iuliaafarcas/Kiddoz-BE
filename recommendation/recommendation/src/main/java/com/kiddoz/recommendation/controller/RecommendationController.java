@@ -67,26 +67,27 @@ public class RecommendationController {
                 .map(Integer::parseInt)
                 .toList());
     }
-
-    @GetMapping("/filter/age")
-    public List<Recommendation> filterRecommendationByAge(@RequestParam(required = false) Integer fromAge,
-                                                          @RequestParam(required = false) Integer fromUnitAge) {
-
-        return this.recommendationService.filterRecommendationByAge(fromAge, fromUnitAge);
-    }
+//
+//    @GetMapping("/filter/age")
+//    public List<Recommendation> filterRecommendationByAge(@RequestParam(required = false) Integer fromAge,
+//                                                          @RequestParam(required = false) Integer fromUnitAge) {
+//
+//        return this.recommendationService.filterRecommendationByAge(fromAge, fromUnitAge);
+//    }
 
     @GetMapping("/filter")
     public List<Object> filterRecommendation(@RequestParam(required = false, defaultValue = "10") Integer itemCount,
                                              @RequestParam Integer pageNumber,
                                              @RequestParam(required = false) String types,
                                              @RequestParam(required = false) Integer fromAge,
+                                             @RequestParam(required = false) Integer toAge,
                                              @RequestParam(required = false) Integer fromUnitAge,
                                              @RequestParam(required = false) Integer starCount,
                                              @RequestParam(required = false) String title) {
 
         return this.recommendationService.filter(itemCount, pageNumber,
                 types != null ? Arrays.stream(types.split(",")).map(Integer::parseInt).toList() : null,
-                fromAge, fromUnitAge, starCount, title);
+                fromAge, toAge, fromUnitAge, starCount, title);
     }
 
 }

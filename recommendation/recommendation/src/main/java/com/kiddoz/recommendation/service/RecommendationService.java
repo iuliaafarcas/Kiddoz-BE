@@ -143,19 +143,20 @@ public class RecommendationService {
         return this.recommendationRepository.findAll(RecommendationSpecifications.typeIn(types));
     }
 
-    public List<Recommendation> filterRecommendationByAge(Integer fromAge, Integer fromUnitAge) {
-        return this.recommendationRepository.findAll(RecommendationSpecifications.ageBetween(fromAge, fromUnitAge));
-    }
+//    public List<Recommendation> filterRecommendationByAge(Integer fromAge, Integer fromUnitAge) {
+//        return this.recommendationRepository.findAll(RecommendationSpecifications.ageBetween(fromAge, fromUnitAge));
+//    }
 
 
-    public List<Object> filter(Integer itemCount, Integer pageNumber, List<Integer> types, Integer fromAge, Integer fromUnitAge, Integer starNumber,
+    public List<Object> filter(Integer itemCount, Integer pageNumber, List<Integer> types, Integer fromAge, Integer toAge,
+                               Integer fromUnitAge, Integer starNumber,
                                String title) {
         List<Object> finalList = new ArrayList<>();
         List<Specification<Recommendation>> predicates = new ArrayList<>();
         if (types != null) predicates.add(RecommendationSpecifications.typeIn(types));
         if (title != null) predicates.add(RecommendationSpecifications.titleIn(title));
-        if (fromAge != null && fromUnitAge != null)
-            predicates.add(RecommendationSpecifications.ageBetween(fromAge, fromUnitAge));
+        if (fromAge != null && toAge != null && fromUnitAge != null)
+            predicates.add(RecommendationSpecifications.ageBetween(fromAge, toAge, fromUnitAge));
         Specification<Recommendation> specRecommendation = null;
         for (var next : predicates) {
             if (specRecommendation == null) {

@@ -12,11 +12,12 @@ public class RecommendationSpecifications {
         return (root, query, criteriaBuilder) -> criteriaBuilder.in(root.get("type")).value(types);
     }
 
-    public static Specification<Recommendation> ageBetween(Integer fromAge, Integer fromUnitAge) {
+    public static Specification<Recommendation> ageBetween(Integer fromAge, Integer toAge, Integer fromUnitAge) {
         return (root, query, criteriaBuilder) -> {
             Predicate fromUnitAgePredicate = criteriaBuilder.equal(root.get("fromUnitAge"), fromUnitAge);
-            Predicate agePredicate = criteriaBuilder.greaterThanOrEqualTo(root.get("fromAge"), fromAge);
-            return criteriaBuilder.and(fromUnitAgePredicate, agePredicate);
+            Predicate fromPredicate = criteriaBuilder.between(root.get("fromAge"), fromAge, toAge);
+            Predicate toAgePredicate = criteriaBuilder.between(root.get("toAge"), fromAge, toAge);
+            return criteriaBuilder.and(fromUnitAgePredicate, criteriaBuilder.or(fromPredicate, toAgePredicate));
         };
     }
 
