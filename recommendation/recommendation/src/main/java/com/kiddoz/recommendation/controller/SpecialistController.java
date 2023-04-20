@@ -21,9 +21,10 @@ public class SpecialistController {
 
     @PostMapping()
     public Specialist addSpecialist(@RequestBody SpecialistAddDto specialistAddDto) {
-        return specialistService.addSpecialist(specialistAddDto.getFirstName(), specialistAddDto.getLastName(),
-                specialistAddDto.getEmail(), specialistAddDto.getDescription(), specialistAddDto.getOccupation(), specialistAddDto.getQuote(), specialistAddDto.getAge(),
-                specialistAddDto.getDomainId(), specialistAddDto.getImage(), specialistAddDto.getDomainsOfActivity());
+        return specialistService.addSpecialist(specialistAddDto.getName(),
+                specialistAddDto.getEmail(), specialistAddDto.getDescription(), specialistAddDto.getOccupation(),
+                specialistAddDto.getQuote(), specialistAddDto.getDomainId(), specialistAddDto.getImage(),
+                specialistAddDto.getDomainsOfActivity(), specialistAddDto.getBirthdate());
     }
 
     @GetMapping
@@ -37,11 +38,24 @@ public class SpecialistController {
     }
 
     @GetMapping("/paged")
-    public List<Object> getSpecialistsPaged(@RequestParam(required = false, defaultValue = "10") Integer
-                                                    itemCount,
-                                            @RequestParam Integer pageNumber) {
+    public List<Object> getSpecialistsPaged(@RequestParam(required = false, defaultValue = "10") Integer itemCount, @RequestParam Integer pageNumber) {
         return specialistService.getSpecialistsPaged(itemCount, pageNumber);
     }
 
+    @GetMapping("/filter")
+    public List<Object> filter(
+            @RequestParam(required = false, defaultValue = "10") Integer itemCount,
+            @RequestParam Integer pageNumber,
+            @RequestParam(required = false) Integer fromAge,
+            @RequestParam(required = false) Integer toAge,
+            @RequestParam(required = false) String name,
+            @RequestParam(required = false) String domainName,
+            @RequestParam(required = false) Integer starCount
+
+
+    ) {
+
+        return this.specialistService.filter(itemCount, pageNumber, fromAge, toAge, name, domainName, starCount);
+    }
 
 }

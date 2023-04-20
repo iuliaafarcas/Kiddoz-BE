@@ -16,10 +16,7 @@ public class ApplicationUser {
     private Integer id;
 
     @Column
-    private String firstName;
-
-    @Column
-    private String lastName;
+    private String name;
 
     @Column
     private String email;

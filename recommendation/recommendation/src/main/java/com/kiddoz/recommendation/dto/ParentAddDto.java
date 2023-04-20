@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParentAddDto {
-    private String firstName;
-    private String lastName;
+
+    private String name;
     private String email;
 }

@@ -18,13 +18,13 @@ public class ParentController {
 
     @PostMapping()
     public Parent addParent(@RequestBody ParentAddDto parentAddDto) {
-        return parentService.addParent(parentAddDto.getFirstName(), parentAddDto.getLastName(),
+        return parentService.addParent(parentAddDto.getName(),
                 parentAddDto.getEmail());
     }
 
     @PutMapping()
     public Parent updateParent(@RequestBody Parent parent) {
-        return parentService.updateParent(parent.getId(), parent.getFirstName(), parent.getLastName(),
+        return parentService.updateParent(parent.getId(), parent.getName(),
                 parent.getEmail());
     }
 

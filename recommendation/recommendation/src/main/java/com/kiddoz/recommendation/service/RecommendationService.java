@@ -143,10 +143,6 @@ public class RecommendationService {
         return this.recommendationRepository.findAll(RecommendationSpecifications.typeIn(types));
     }
 
-//    public List<Recommendation> filterRecommendationByAge(Integer fromAge, Integer fromUnitAge) {
-//        return this.recommendationRepository.findAll(RecommendationSpecifications.ageBetween(fromAge, fromUnitAge));
-//    }
-
 
     public List<Object> filter(Integer itemCount, Integer pageNumber, List<Integer> types, Integer fromAge, Integer toAge,
                                Integer fromUnitAge, Integer starNumber,

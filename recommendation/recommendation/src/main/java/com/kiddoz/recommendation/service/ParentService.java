@@ -16,8 +16,8 @@ public class ParentService {
         this.applicationUserRepository = applicationUserRepository;
     }
 
-    public Parent addParent(String firstName, String lastName, String email) {
-        Parent newParent = new Parent(null, firstName, lastName, email);
+    public Parent addParent(String name, String email) {
+        Parent newParent = new Parent(null, name, email);
         return applicationUserRepository.save(newParent);
     }
 
@@ -26,14 +26,14 @@ public class ParentService {
 //        applicationUserRepository.deleteById(id);
     }
 
-    public Parent updateParent(Integer id, String firstName, String lastName, String email) {
+    public Parent updateParent(Integer id, String name, String email) {
         var newParent = applicationUserRepository.findById(id).stream()
                 .filter(parent -> parent instanceof Parent)
                 .map(parent -> (Parent) parent).toList();
         if (newParent.isEmpty()) return null;
         else {
-            newParent.get(0).setFirstName(firstName);
-            newParent.get(0).setLastName(lastName);
+            newParent.get(0).setName(name);
+
             newParent.get(0).setEmail(email);
             return applicationUserRepository.save(newParent.get(0));
 
