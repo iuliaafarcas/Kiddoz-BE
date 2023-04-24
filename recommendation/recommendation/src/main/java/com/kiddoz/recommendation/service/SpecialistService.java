@@ -96,14 +96,14 @@ public class SpecialistService {
         if (starNumber == null) {
             int fromIndex = Math.min((pageNumber - 1) * itemCount, resultList.size());
             int toIndex = Math.min(pageNumber * itemCount, resultList.size());
-            finalList.add(resultList.subList(fromIndex, toIndex).size());
+            finalList.add(resultList.size());
             finalList.add(resultList.subList(fromIndex, toIndex));
         } else {
             List<Specialist> list_ = resultList.stream().filter(element -> Math.round(ratingSpecialistRepository
                     .getRatingForSpecialist(element.getId())) >= starNumber).collect(Collectors.toList());
             int fromIndex = Math.min((pageNumber - 1) * itemCount, list_.size());
             int toIndex = Math.min(pageNumber * itemCount, list_.size());
-            finalList.add(list_.subList(fromIndex, toIndex).size());
+            finalList.add(list_.size());
             finalList.add(list_.subList(fromIndex, toIndex));
         }
         return finalList;
