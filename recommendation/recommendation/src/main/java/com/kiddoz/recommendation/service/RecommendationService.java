@@ -144,7 +144,8 @@ public class RecommendationService {
     }
 
 
-    public List<Object> filter(Integer itemCount, Integer pageNumber, List<Integer> types, Integer fromAge, Integer toAge,
+    public List<Object> filter(Integer itemCount, Integer pageNumber, List<Integer> types, Integer fromAge,
+                               Integer toAge,
                                Integer fromUnitAge, Integer starNumber,
                                String title) {
         List<Object> finalList = new ArrayList<>();

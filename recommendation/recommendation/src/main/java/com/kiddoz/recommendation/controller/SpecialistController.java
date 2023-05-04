@@ -21,10 +21,10 @@ public class SpecialistController {
 
     @PostMapping()
     public Specialist addSpecialist(@RequestBody SpecialistAddDto specialistAddDto) {
-        return specialistService.addSpecialist(specialistAddDto.getName(),
+        return specialistService.addSpecialist(specialistAddDto.getName(), specialistAddDto.getPassword(),
                 specialistAddDto.getEmail(), specialistAddDto.getDescription(), specialistAddDto.getOccupation(),
                 specialistAddDto.getQuote(), specialistAddDto.getDomainId(), specialistAddDto.getImage(),
-                specialistAddDto.getDomainsOfActivity(), specialistAddDto.getBirthdate());
+                specialistAddDto.getDomainsOfInterests(), specialistAddDto.getBirthdate());
     }
 
     @GetMapping

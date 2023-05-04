@@ -8,8 +8,8 @@ import jakarta.persistence.InheritanceType;
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Parent extends ApplicationUser {
 
-    public Parent(Integer id, String name, String email) {
-        super(id, name, email);
+    public Parent(Integer id, String name, String email, String password) {
+        super(id, name, email, password);
     }
 
     public Parent() {

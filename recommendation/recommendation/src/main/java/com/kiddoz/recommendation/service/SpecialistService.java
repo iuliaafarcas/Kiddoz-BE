@@ -1,9 +1,11 @@
 package com.kiddoz.recommendation.service;
 
 import com.kiddoz.recommendation.model.ApplicationUser;
+import com.kiddoz.recommendation.model.DomainInterest;
 import com.kiddoz.recommendation.model.Specialist;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.DomainCategoryRepository;
+import com.kiddoz.recommendation.repository.DomainInterestRepository;
 import com.kiddoz.recommendation.repository.RatingSpecialistRepository;
 import com.kiddoz.recommendation.utils.SpecialistSpecifications;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +28,8 @@ public class SpecialistService {
 
     private RatingSpecialistRepository ratingSpecialistRepository;
 
+    private DomainInterestRepository domainInterestRepository;
+
     public SpecialistService(ApplicationUserRepository applicationUserRepository,
                              DomainCategoryRepository domainCategoryRepository,
                              RatingSpecialistRepository ratingSpecialistRepository) {
@@ -35,13 +39,18 @@ public class SpecialistService {
     }
 
 
-    public Specialist addSpecialist(String name, String email, String description,
+    public Specialist addSpecialist(String name, String email, String password, String description,
                                     String occupation, String quote, Integer domainId,
-                                    String image, String domainsOfActivity, Date birthday) {
+                                    String image, List<Integer> domainsOfInterests, Date birthday) {
         var domainCategory = domainCategoryRepository.findById(domainId)
                 .orElseThrow(() -> new RuntimeException("Domain not found"));
-        Specialist newSpecialist = new Specialist(null, name, email, description, occupation, quote,
-                domainCategory, image, domainsOfActivity, birthday);
+        List<DomainInterest> listOfDomains = new ArrayList<>();
+        for (var id : domainsOfInterests) {
+            var newBenefit = domainInterestRepository.findById(id);
+            newBenefit.ifPresent(listOfDomains::add);
+        }
+        Specialist newSpecialist = new Specialist(null, name, email, password, description, occupation, quote,
+                domainCategory, image, listOfDomains, birthday);
 
         return applicationUserRepository.save(newSpecialist);
     }

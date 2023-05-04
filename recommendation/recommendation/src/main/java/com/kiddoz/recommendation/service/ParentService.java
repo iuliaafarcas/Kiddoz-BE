@@ -16,8 +16,8 @@ public class ParentService {
         this.applicationUserRepository = applicationUserRepository;
     }
 
-    public Parent addParent(String name, String email) {
-        Parent newParent = new Parent(null, name, email);
+    public Parent addParent(String name, String email, String password) {
+        Parent newParent = new Parent(null, name, email, password);
         return applicationUserRepository.save(newParent);
     }
 

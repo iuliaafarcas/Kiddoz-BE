@@ -1,16 +1,18 @@
 package com.kiddoz.recommendation.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class ApplicationUser {
+public class DomainInterest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -18,9 +20,7 @@ public class ApplicationUser {
     @Column
     private String name;
 
-    @Column
-    private String email;
-
-    @Column
-    private String password;
+    @ManyToMany(mappedBy = "domainsInterest")
+    @JsonBackReference
+    private List<Specialist> specialists;
 }

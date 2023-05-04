@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -12,11 +13,12 @@ import java.util.Date;
 public class SpecialistAddDto {
     private String name;
     private String email;
+    private String password;
     private String description;
     private String occupation;
     private String quote;
     private Integer domainId;
     private String image;
-    private String domainsOfActivity;
+    private List<Integer> domainsOfInterests;
     private Date birthdate;
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin
 @RestController
 @RequestMapping("parents")
 public class ParentController {
@@ -19,7 +20,7 @@ public class ParentController {
     @PostMapping()
     public Parent addParent(@RequestBody ParentAddDto parentAddDto) {
         return parentService.addParent(parentAddDto.getName(),
-                parentAddDto.getEmail());
+                parentAddDto.getEmail(), parentAddDto.getPassword());
     }
 
     @PutMapping()

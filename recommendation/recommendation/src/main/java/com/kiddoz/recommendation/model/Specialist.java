@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -26,8 +27,6 @@ public class Specialist extends ApplicationUser {
     @Column
     private String description;
 
-    @Column
-    private String domainOfActivities;
 
     @Temporal(TemporalType.DATE)
     private Date birthday;
@@ -36,16 +35,19 @@ public class Specialist extends ApplicationUser {
     @JoinColumn(name = "domain_id", nullable = false)
     private DomainCategory domain;
 
-    public Specialist(Integer id, String name, String email, String description,
+    @ManyToMany
+    private List<DomainInterest> domainsInterest;
+
+    public Specialist(Integer id, String name, String email, String password, String description,
                       String occupation, String quote, DomainCategory domain, String image,
-                      String domainOfActivities, Date birthday) {
-        super(id, name, email);
+                      List<DomainInterest> domainsInterest, Date birthday) {
+        super(id, name, email, password);
         this.description = description;
         this.occupation = occupation;
         this.quote = quote;
         this.domain = domain;
         this.image = image;
-        this.domainOfActivities = domainOfActivities;
+        this.domainsInterest = domainsInterest;
         this.birthday = birthday;
     }
 }

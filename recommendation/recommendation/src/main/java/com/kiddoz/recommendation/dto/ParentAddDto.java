@@ -11,4 +11,5 @@ public class ParentAddDto {
 
     private String name;
     private String email;
+    private String password;
 }
