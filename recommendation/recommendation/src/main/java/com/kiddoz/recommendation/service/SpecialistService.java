@@ -80,11 +80,12 @@ public class SpecialistService {
     public List<Object> filter(Integer itemCount, Integer pageNumber, Integer fromAge, Integer toAge,
                                String name, String domainName,
                                Integer starNumber) {
-        List<Specification<Specialist>> predicates = new ArrayList<>();
+        List<Specification<ApplicationUser>> predicates = new ArrayList<>();
+        predicates.add(SpecialistSpecifications.isSpecialist());
         if (fromAge != null || toAge != null) predicates.add(SpecialistSpecifications.ageBetween(fromAge, toAge));
         if (name != null) predicates.add(SpecialistSpecifications.nameIn(name));
         if (domainName != null) predicates.add(SpecialistSpecifications.categoryEquals(domainName));
-        Specification<Specialist> specSpecialist = null;
+        Specification<ApplicationUser> specSpecialist = null;
         for (var next : predicates) {
             if (specSpecialist == null) {
                 specSpecialist = next;
@@ -92,24 +93,21 @@ public class SpecialistService {
                 specSpecialist = specSpecialist.and(next);
             }
         }
-        List<Specialist> resultList;
-        if (specSpecialist == null)
-            resultList = this.applicationUserRepository.findAll()
-                    .stream()
-                    .filter(element -> element instanceof Specialist)
-                    .map(element -> (Specialist) element)
-                    .collect(Collectors.toList());
-        else resultList = this.applicationUserRepository.findAll(specSpecialist);
+        List<Specialist> specialistList = this.applicationUserRepository.findAll(specSpecialist).stream()
+                .map(appUser -> (Specialist) appUser)
+                .collect(Collectors.toList());
+
         List<Object> finalList = new ArrayList<>();
 
         if (starNumber == null) {
-            int fromIndex = Math.min((pageNumber - 1) * itemCount, resultList.size());
-            int toIndex = Math.min(pageNumber * itemCount, resultList.size());
-            finalList.add(resultList.size());
-            finalList.add(resultList.subList(fromIndex, toIndex));
+            int fromIndex = Math.min((pageNumber - 1) * itemCount, specialistList.size());
+            int toIndex = Math.min(pageNumber * itemCount, specialistList.size());
+            finalList.add(specialistList.size());
+            finalList.add(specialistList.subList(fromIndex, toIndex));
         } else {
-            List<Specialist> list_ = resultList.stream().filter(element -> Math.round(ratingSpecialistRepository
-                    .getRatingForSpecialist(element.getId())) >= starNumber).collect(Collectors.toList());
+            List<Specialist> list_ = specialistList.stream()
+                    .filter(element -> Math.round(ratingSpecialistRepository.getRatingForSpecialist(element.getId())) >= starNumber)
+                    .collect(Collectors.toList());
             int fromIndex = Math.min((pageNumber - 1) * itemCount, list_.size());
             int toIndex = Math.min(pageNumber * itemCount, list_.size());
             finalList.add(list_.size());

@@ -1,5 +1,6 @@
 package com.kiddoz.recommendation.utils;
 
+import com.kiddoz.recommendation.model.ApplicationUser;
 import com.kiddoz.recommendation.model.DomainCategory;
 import com.kiddoz.recommendation.model.Specialist;
 import jakarta.persistence.criteria.Expression;
@@ -8,14 +9,18 @@ import org.springframework.data.jpa.domain.Specification;
 
 
 public class SpecialistSpecifications {
-    public static Specification<Specialist> categoryEquals(String domainName) {
+    public static Specification<ApplicationUser> categoryEquals(String domainName) {
         return (root, query, criteriaBuilder) -> {
             Join<Specialist, DomainCategory> specialistDomainCategoryJoin = root.join("domain");
             return criteriaBuilder.equal(specialistDomainCategoryJoin.get("name"), domainName);
         };
     }
 
-    public static Specification<Specialist> ageBetween(Integer fromAge, Integer toAge) {
+    public static Specification<ApplicationUser> isSpecialist() {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.type(), Specialist.class);
+    }
+
+    public static Specification<ApplicationUser> ageBetween(Integer fromAge, Integer toAge) {
         return (root, query, criteriaBuilder) -> {
             Expression<Integer> birthday = criteriaBuilder.function(
                     "replace", String.class, root.get("birthday").as(String.class),
@@ -37,11 +42,8 @@ public class SpecialistSpecifications {
         };
     }
 
-    public static Specification<Specialist> nameIn(String name) {
-        return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.like(criteriaBuilder.lower(root.get("name")),
-                    "%" + name.toLowerCase() + "%");
-        };
+    public static Specification<ApplicationUser> nameIn(String name) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + name.toLowerCase() + "%");
 
     }
 
