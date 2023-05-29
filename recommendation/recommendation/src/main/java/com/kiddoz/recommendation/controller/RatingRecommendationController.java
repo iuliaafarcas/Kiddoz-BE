@@ -19,7 +19,8 @@ public class RatingRecommendationController {
 
     @PostMapping()
     public RatingRecommendation addRatingRecommendation(@RequestBody RatingRecommendationAddDto ratingAddDto) {
-        return ratingRecommendationService.addRatingRecommendation(ratingAddDto.getRecommendationId(), ratingAddDto.getParentId(), ratingAddDto.getNoStars());
+        return ratingRecommendationService.addRatingRecommendation(ratingAddDto.getRecommendationId(),
+                ratingAddDto.getParentId(), ratingAddDto.getNoStars());
     }
 
     @GetMapping()

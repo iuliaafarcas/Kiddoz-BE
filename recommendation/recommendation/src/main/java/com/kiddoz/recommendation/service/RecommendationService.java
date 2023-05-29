@@ -169,7 +169,7 @@ public class RecommendationService {
         if (starNumber == null) {
             int fromIndex = Math.min((pageNumber - 1) * itemCount, resultList.size());
             int toIndex = Math.min(pageNumber * itemCount, resultList.size());
-            finalList.add(resultList.subList(fromIndex, toIndex).size());
+            finalList.add(resultList.size());
             finalList.add(resultList.subList(fromIndex, toIndex));
         } else {
             List<Recommendation> list_ = resultList.stream().filter(element -> Math.round(ratingRecommendationRepository

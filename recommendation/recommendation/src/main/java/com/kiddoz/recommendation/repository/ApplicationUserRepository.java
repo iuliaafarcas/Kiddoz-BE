@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ApplicationUserRepository extends JpaRepository<ApplicationUser, Integer>,
         JpaSpecificationExecutor<Specialist> {
-
+    ApplicationUser findApplicationUserByEmail(String email);
 }
