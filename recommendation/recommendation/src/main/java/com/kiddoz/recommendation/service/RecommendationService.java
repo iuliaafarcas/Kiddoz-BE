@@ -1,11 +1,13 @@
 package com.kiddoz.recommendation.service;
 
+import com.kiddoz.recommendation.dto.AnswersDto;
 import com.kiddoz.recommendation.model.*;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.BenefitRepository;
 import com.kiddoz.recommendation.repository.RatingRecommendationRepository;
 import com.kiddoz.recommendation.repository.RecommendationRepository;
 import com.kiddoz.recommendation.utils.RecommendationSpecifications;
+import org.nd4j.linalg.api.ndarray.INDArray;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,17 +21,21 @@ public class RecommendationService {
     private final RecommendationRepository recommendationRepository;
     private final ApplicationUserRepository userRepository;
     private final BenefitRepository benefitRepository;
+    private final BenefitService benefitService;
 
+    private final AIService aiService;
     private final RatingRecommendationRepository ratingRecommendationRepository;
 
 
     public RecommendationService(RecommendationRepository recommendationRepository,
                                  ApplicationUserRepository userRepository,
                                  BenefitRepository benefitRepository,
-                                 RatingRecommendationRepository ratingRecommendationRepository) {
+                                 BenefitService benefitService, AIService aiService, RatingRecommendationRepository ratingRecommendationRepository) {
         this.recommendationRepository = recommendationRepository;
         this.userRepository = userRepository;
         this.benefitRepository = benefitRepository;
+        this.benefitService = benefitService;
+        this.aiService = aiService;
         this.ratingRecommendationRepository = ratingRecommendationRepository;
     }
 
@@ -169,7 +175,7 @@ public class RecommendationService {
         if (starNumber == null) {
             int fromIndex = Math.min((pageNumber - 1) * itemCount, resultList.size());
             int toIndex = Math.min(pageNumber * itemCount, resultList.size());
-            finalList.add(resultList.subList(fromIndex, toIndex).size());
+            finalList.add(resultList.size());
             finalList.add(resultList.subList(fromIndex, toIndex));
         } else {
             List<Recommendation> list_ = resultList.stream().filter(element -> Math.round(ratingRecommendationRepository
@@ -181,6 +187,29 @@ public class RecommendationService {
         }
         return finalList;
     }
+
+    public List<Object> getRecommendationsBasedOnAnswers(AnswersDto answersDto) {
+        aiService.createSample(answersDto.getAnswers());
+        INDArray prediction = aiService.getPrediction().getRow(0);
+        List<Object> finalList = new ArrayList<>();
+        List<Recommendation> recommendations = new ArrayList<>();
+        System.out.println("predictii" + prediction);
+        if (prediction.getDouble(0) > 0.55)
+            recommendations.addAll(this.benefitService.getRecommendationsByBenefit(252));
+        if (prediction.getDouble(1) > 0.55)
+            recommendations.addAll(this.benefitService.getRecommendationsByBenefit(265));
+        if (prediction.getDouble(2) > 0.55)
+            recommendations.addAll(this.benefitService.getRecommendationsByBenefit(259));
+        if (prediction.getDouble(3) > 0.55)
+            recommendations.addAll(this.benefitService.getRecommendationsByBenefit(204));
+        if (prediction.getDouble(4) > 0.55) recommendations.addAll(this.benefitService.getRecommendationsByBenefit(53));
+        finalList.add(recommendations.size());
+        finalList.add(recommendations);
+        return finalList;
+
+    }
+
+
 }
 
 

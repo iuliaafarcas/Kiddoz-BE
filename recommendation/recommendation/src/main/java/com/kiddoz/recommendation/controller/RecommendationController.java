@@ -1,5 +1,6 @@
 package com.kiddoz.recommendation.controller;
 
+import com.kiddoz.recommendation.dto.AnswersDto;
 import com.kiddoz.recommendation.dto.RecommendationAddDto;
 import com.kiddoz.recommendation.model.Recommendation;
 import com.kiddoz.recommendation.service.RecommendationService;
@@ -88,6 +89,12 @@ public class RecommendationController {
         return this.recommendationService.filter(itemCount, pageNumber,
                 types != null ? Arrays.stream(types.split(",")).map(Integer::parseInt).toList() : null,
                 fromAge, toAge, fromUnitAge, starCount, title);
+    }
+
+    @PostMapping("/answers")
+    public List<Object> generateRecommendationsByAI(@RequestBody AnswersDto answers) {
+        return recommendationService.getRecommendationsBasedOnAnswers(answers);
+
     }
 
 }

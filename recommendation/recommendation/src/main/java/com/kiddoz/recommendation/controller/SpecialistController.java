@@ -44,7 +44,7 @@ public class SpecialistController {
 
     @GetMapping("/filter")
     public List<Object> filter(
-            @RequestParam(required = false, defaultValue = "10") Integer itemCount,
+            @RequestParam(required = false, defaultValue = "12") Integer itemCount,
             @RequestParam Integer pageNumber,
             @RequestParam(required = false) Integer fromAge,
             @RequestParam(required = false) Integer toAge,
