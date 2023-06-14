@@ -1,41 +1,57 @@
 package com.kiddoz.recommendation.security;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.Objects;
+import java.time.Instant;
+import java.util.stream.Collectors;
 
 
 @Component
 public class JwtUtil {
-    private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    private final JwtEncoder jwtEncoder;
+    private final JwtDecoder jwtDecoder;
 
-    private Integer validity = 60 * 60 * 60 * 24 * 7;
+    private static final Long EXPIRATION_IN_SECONDS = 36000L;
 
-    public String generateJwtToken(String user) {
-        return Jwts.builder().setSubject(user)
-                .signWith(key)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validity * 1000))
-                .compact();
+    public JwtUtil(JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
+        this.jwtEncoder = jwtEncoder;
+        this.jwtDecoder = jwtDecoder;
     }
 
-    public Boolean validateJwtToken(String token, String username) {
-        return Objects.equals(getUsernameFromToken(token), username) && !tokenExpired(token);
+    public String generateToken(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+
+        Instant now = Instant.now();
+
+        String scope = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
+
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(EXPIRATION_IN_SECONDS))
+                .subject(user.getUsername())
+
+                .claim("roles", scope)
+                .build();
+        return jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
 
-    public String getUsernameFromToken(String token) {
-        var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return claims.getSubject();
+    public String getUsernameFromJwtToken(String token) {
+        return jwtDecoder.decode(token).getSubject();
     }
 
-    public Boolean tokenExpired(String token) {
-        var claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-        return claims.getExpiration().before(new Date());
+    public boolean validateJwtToken(String token) {
+        try {
+            jwtDecoder.decode(token);
+            return true;
+        } catch (JwtException e) {
+            return false;
+        }
     }
 }
 

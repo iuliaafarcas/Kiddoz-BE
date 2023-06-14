@@ -193,6 +193,12 @@ public class RecommendationService {
         INDArray prediction = aiService.getPrediction().getRow(0);
         List<Object> finalList = new ArrayList<>();
         List<Recommendation> recommendations = new ArrayList<>();
+        List<Double> predictionList = new ArrayList<>();
+        predictionList.add(prediction.getDouble(0));
+        predictionList.add(prediction.getDouble(1));
+        predictionList.add(prediction.getDouble(2));
+        predictionList.add(prediction.getDouble(3));
+        predictionList.add(prediction.getDouble(4));
         System.out.println("predictii" + prediction);
         if (prediction.getDouble(0) > 0.55)
             recommendations.addAll(this.benefitService.getRecommendationsByBenefit(252));
@@ -204,6 +210,7 @@ public class RecommendationService {
             recommendations.addAll(this.benefitService.getRecommendationsByBenefit(204));
         if (prediction.getDouble(4) > 0.55) recommendations.addAll(this.benefitService.getRecommendationsByBenefit(53));
         finalList.add(recommendations.size());
+        finalList.add(predictionList);
         finalList.add(recommendations);
         return finalList;
 

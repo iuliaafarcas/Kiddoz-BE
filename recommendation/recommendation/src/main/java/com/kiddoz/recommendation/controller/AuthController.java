@@ -37,7 +37,7 @@ public class AuthController {
 
             return ResponseEntity.ok()
                     .body(
-                            "Bearer " + jwtUtils.generateJwtToken(user.getUsername())
+                            "Bearer " + jwtUtils.generateToken(authenticate)
                     );
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -51,6 +51,6 @@ public class AuthController {
 
     @GetMapping
     public ResponseEntity<?> getUsernameFromToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
-        return ResponseEntity.ok(jwtUtils.getUsernameFromToken(token.substring(7)));
+        return ResponseEntity.ok(jwtUtils.getUsernameFromJwtToken(token.substring(7)));
     }
 }

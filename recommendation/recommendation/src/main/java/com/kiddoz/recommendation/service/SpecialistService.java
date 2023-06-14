@@ -23,19 +23,21 @@ public class SpecialistService {
 //    @Value("${images.path}")
 //    private String ImagePath;
 
-    private ApplicationUserRepository applicationUserRepository;
-    private DomainCategoryRepository domainCategoryRepository;
+    private final ApplicationUserRepository applicationUserRepository;
+    private final DomainCategoryRepository domainCategoryRepository;
 
-    private RatingSpecialistRepository ratingSpecialistRepository;
+    private final RatingSpecialistRepository ratingSpecialistRepository;
 
-    private DomainInterestRepository domainInterestRepository;
+    private final DomainInterestRepository domainInterestRepository;
+
 
     public SpecialistService(ApplicationUserRepository applicationUserRepository,
                              DomainCategoryRepository domainCategoryRepository,
-                             RatingSpecialistRepository ratingSpecialistRepository) {
+                             RatingSpecialistRepository ratingSpecialistRepository, DomainInterestRepository domainInterestRepository) {
         this.applicationUserRepository = applicationUserRepository;
         this.domainCategoryRepository = domainCategoryRepository;
         this.ratingSpecialistRepository = ratingSpecialistRepository;
+        this.domainInterestRepository = domainInterestRepository;
     }
 
 

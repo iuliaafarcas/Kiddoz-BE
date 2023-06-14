@@ -35,12 +35,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
         String token = header.split(" ")[1].trim();
-        String userName = jwtUtil.getUsernameFromToken(token);
+        String userName = jwtUtil.getUsernameFromJwtToken(token);
         if (applicationUserRepository.findApplicationUserByEmail(userName) == null)
             throw new AuthorizationServiceException(
                     "Invalid jwt email"
             );
-        if (!jwtUtil.validateJwtToken(token, userName)) throw new AuthorizationServiceException("Invalid jwt");
+        if (!jwtUtil.validateJwtToken(token)) throw new AuthorizationServiceException("Invalid jwt");
 
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
