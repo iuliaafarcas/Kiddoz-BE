@@ -1,7 +1,7 @@
 package com.kiddoz.recommendation.controller;
 
+import com.kiddoz.recommendation.dto.ApplicationUserDto;
 import com.kiddoz.recommendation.dto.LoginDto;
-import com.kiddoz.recommendation.model.ApplicationUser;
 import com.kiddoz.recommendation.security.JwtUtil;
 import com.kiddoz.recommendation.service.ApplicationUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class AuthController {
     }
 
     @GetMapping("userData")
-    public ApplicationUser getUserData(Authentication authentication) {
+    public ApplicationUserDto getUserData(Authentication authentication) {
         return applicationUserDetailsService.getApplicationUserByUsername(authentication.getName());
     }
 

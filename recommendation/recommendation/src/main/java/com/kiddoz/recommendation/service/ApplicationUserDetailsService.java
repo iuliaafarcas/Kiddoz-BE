@@ -1,8 +1,10 @@
 package com.kiddoz.recommendation.service;
 
+import com.kiddoz.recommendation.dto.ApplicationUserDto;
 import com.kiddoz.recommendation.model.ApplicationUser;
 import com.kiddoz.recommendation.model.Parent;
 import com.kiddoz.recommendation.model.Roles;
+import com.kiddoz.recommendation.model.Specialist;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
@@ -25,7 +27,16 @@ public class ApplicationUserDetailsService implements UserDetailsService {
                 .authorities(user instanceof Parent ? Roles.USER_PARENT : Roles.USER_SPECIALIST).build();
     }
 
-    public ApplicationUser getApplicationUserByUsername(String username) {
-        return repository.findApplicationUserByEmail(username);
+    public ApplicationUserDto getApplicationUserByUsername(String username) {
+
+        ApplicationUser user = repository.findApplicationUserByEmail(username);
+        ApplicationUserDto userDto = new ApplicationUserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setPassword(user.getPassword());
+        userDto.setRole(user instanceof Specialist ? "Specialist" : user instanceof Parent ? "Parent" : "");
+
+        return userDto;
     }
 }
