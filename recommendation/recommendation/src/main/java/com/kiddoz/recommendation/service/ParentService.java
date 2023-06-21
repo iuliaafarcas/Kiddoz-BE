@@ -2,6 +2,7 @@ package com.kiddoz.recommendation.service;
 
 import com.kiddoz.recommendation.model.Parent;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,10 @@ public class ParentService {
     }
 
     public Parent addParent(String name, String email, String password) {
-        Parent newParent = new Parent(null, name, email, password);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        var parent = applicationUserRepository.findApplicationUserByEmail(email);
+        if (parent != null) throw new RuntimeException("User already has an account!");
+        Parent newParent = new Parent(null, name, email, bCryptPasswordEncoder.encode(password));
         return applicationUserRepository.save(newParent);
     }
 
