@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,7 +35,8 @@ public class AIService {
     }
 
     public void loadModel() throws IOException, UnsupportedKerasConfigurationException, InvalidKerasConfigurationException {
-        this.model = KerasModelImport.importKerasSequentialModelAndWeights(modelPath);
+        ClassPathResource modelResource = new ClassPathResource(modelPath);
+        this.model = KerasModelImport.importKerasSequentialModelAndWeights(modelResource.getInputStream());
     }
 
     public void createSample(List<Integer> questionResults) {
