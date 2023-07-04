@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - kiddozbe
+name: Build and deploy JAR app to Azure Web App - kiddozBE
 
 on:
   push:
@@ -21,14 +21,38 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Init gradle wrapper
+        run: gradle wrapper
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: Run build with Gradle Wrapper
+        run: ./gradlew clean build
+
+      - name: Delete Old Artifacts
+        uses: actions/github-script@v6
+        id: artifact
+        with:
+          script: |
+            const res = await github.rest.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+            res.data.artifacts
+              .forEach(({ id }) => {
+                github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: id,
+                })
+              })
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: '${{ github.workspace }}/build/libs/recommendation-0.0.1-SNAPSHOT/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -47,7 +71,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'kiddozbe'
+          app-name: 'kiddozBE'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_81AD174DCB284467B11970FC4117C8E4 }}
           package: '*.jar'
