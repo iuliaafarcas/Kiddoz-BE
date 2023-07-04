@@ -1,7 +1,6 @@
 package com.kiddoz.recommendation.service;
 
 
-import com.kiddoz.recommendation.model.Parent;
 import com.kiddoz.recommendation.model.RatingRecommendation;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.RatingRecommendationRepository;
@@ -25,17 +24,15 @@ public class RatingRecommendationService {
 
     public RatingRecommendation addRatingRecommendation(Integer recommendationId, Integer parentId, Integer noStars) {
         var recommendation = recommendationRepository.findById(recommendationId).orElseThrow(() -> new RuntimeException("Recommendation not found. Rating for R not added!"));
-        var parent = applicationUserRepository.findById(parentId).orElseThrow(() -> new RuntimeException("User not found. Rating for R not added!"));
-        if (parent instanceof Parent) {
-            if (existsRecommendationRating(recommendationId, parentId) != null) {
-                RatingRecommendation oldRating = existsRecommendationRating(recommendationId, parentId);
-                oldRating.setNoStars(noStars);
-                return this.ratingRecommendationRepository.save(oldRating);
-            } else {
-                RatingRecommendation ratingRecommendation = new RatingRecommendation(null, recommendation, (Parent) parent, noStars);
-                return this.ratingRecommendationRepository.save(ratingRecommendation);
-            }
-        } else throw new RuntimeException("Specialists cannot add a rating");
+        var parent = applicationUserRepository.getParentById(parentId).orElseThrow(() -> new RuntimeException("User not found. Rating for R not added!"));
+        if (existsRecommendationRating(recommendationId, parentId) != null) {
+            RatingRecommendation oldRating = existsRecommendationRating(recommendationId, parentId);
+            oldRating.setNoStars(noStars);
+            return this.ratingRecommendationRepository.save(oldRating);
+        } else {
+            RatingRecommendation ratingRecommendation = new RatingRecommendation(null, recommendation, parent, noStars);
+            return this.ratingRecommendationRepository.save(ratingRecommendation);
+        }
     }
 
     public RatingRecommendation existsRecommendationRating(Integer recommendationId, Integer parentId) {

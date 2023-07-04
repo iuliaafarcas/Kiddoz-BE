@@ -14,11 +14,11 @@ public class RatingRecommendation {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "recommendation_id", nullable = false)
     private Recommendation recommendation;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "parent_id", nullable = false)
     private Parent parent;
 

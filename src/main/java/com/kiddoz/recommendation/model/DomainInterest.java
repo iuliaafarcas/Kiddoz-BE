@@ -20,7 +20,7 @@ public class DomainInterest {
     @Column
     private String name;
 
-    @ManyToMany(mappedBy = "domainsInterest")
+    @ManyToMany(mappedBy = "domainsInterest", cascade = {CascadeType.MERGE})
     @JsonBackReference
     private List<Specialist> specialists;
 }

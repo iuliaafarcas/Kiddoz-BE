@@ -21,7 +21,7 @@ public class Benefit {
     @Column
     private String name;
 
-    @ManyToMany(mappedBy = "benefits")
+    @ManyToMany(mappedBy = "benefits", cascade = {CascadeType.MERGE})
     @JsonBackReference
     private List<Recommendation> recommendations;
 }

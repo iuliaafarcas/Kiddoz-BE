@@ -33,11 +33,11 @@ public class Specialist extends ApplicationUser {
     @Temporal(TemporalType.DATE)
     private Date birthday;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "domain_id", nullable = false)
     private DomainCategory domain;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     private List<DomainInterest> domainsInterest;
 
     public Specialist(Integer id, String name, String email, String password, String description,

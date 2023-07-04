@@ -40,10 +40,10 @@ public class Recommendation {
     @Column
     private String image;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "specialist_id", nullable = false)
     private Specialist specialist;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     private List<Benefit> benefits;
 }
