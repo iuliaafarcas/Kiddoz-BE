@@ -14,11 +14,11 @@ public class RatingSpecialist {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "specialist_id", nullable = false)
     private Specialist specialist;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "parent_id", nullable = false)
     private Parent parent;
 

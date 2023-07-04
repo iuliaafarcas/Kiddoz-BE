@@ -1,9 +1,7 @@
 package com.kiddoz.recommendation.service;
 
 
-import com.kiddoz.recommendation.model.Parent;
 import com.kiddoz.recommendation.model.RatingSpecialist;
-import com.kiddoz.recommendation.model.Specialist;
 import com.kiddoz.recommendation.repository.ApplicationUserRepository;
 import com.kiddoz.recommendation.repository.RatingSpecialistRepository;
 import org.springframework.stereotype.Service;
@@ -23,19 +21,16 @@ public class RatingSpecialistService {
     }
 
     public RatingSpecialist addRatingSpecialist(Integer specialistId, Integer parentId, Integer noStars) {
-        var specialist = applicationUserRepository.findById(specialistId).orElseThrow(() -> new RuntimeException("Specialist not found. Rating for S not added!"));
-        var parent = applicationUserRepository.findById(parentId).orElseThrow(() -> new RuntimeException("User not found. Rating for R not added!"));
-        if (parent instanceof Parent) {
-            if (existsSpecialistRating(specialistId, parentId) != null) {
-                RatingSpecialist oldRating = existsSpecialistRating(specialistId, parentId);
-                oldRating.setNoStars(noStars);
-                return this.ratingSpecialistRepository.save(oldRating);
-            } else {
-                RatingSpecialist ratingSpecialist = new RatingSpecialist(null, (Specialist) specialist, (Parent) parent, noStars);
-                return this.ratingSpecialistRepository.save(ratingSpecialist);
-            }
-        } else throw new RuntimeException("Specialists cannot add a rating");
-
+        var specialist = applicationUserRepository.getSpecialistById(specialistId).orElseThrow(() -> new RuntimeException("Specialist not found. Rating for S not added!"));
+        var parent = applicationUserRepository.getParentById(parentId).orElseThrow(() -> new RuntimeException("User not found. Rating for R not added!"));
+        if (existsSpecialistRating(specialistId, parentId) != null) {
+            RatingSpecialist oldRating = existsSpecialistRating(specialistId, parentId);
+            oldRating.setNoStars(noStars);
+            return this.ratingSpecialistRepository.save(oldRating);
+        } else {
+            RatingSpecialist ratingSpecialist = new RatingSpecialist(null, specialist, parent, noStars);
+            return this.ratingSpecialistRepository.save(ratingSpecialist);
+        }
     }
 
     public RatingSpecialist existsSpecialistRating(Integer specialistId, Integer parentId) {
