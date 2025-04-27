@@ -1,0 +1,42 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  datasource:
+    url: jdbc:postgresql://kiddozdb.postgres.database.azure.com:5432/recommendationDB
+    username: iuliafarcas@kiddozdb
+    password: Mov04062001!
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 6
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+server:
+  port: 8081
+
+model:
+  path: model.h5
+
+jwt:
+  public:
+    key: classpath:rsa.public.key
+  private:
+    key: classpath:rsa.private.key

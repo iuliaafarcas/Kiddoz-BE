@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  datasource:
+    url: jdbc:postgresql://microservices-kiddozdb-1:5432/kiddozdb
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: kafka:29092
+
+server:
+  port: 9000

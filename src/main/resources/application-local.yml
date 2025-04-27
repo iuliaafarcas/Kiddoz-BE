@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/recommendationDB
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: localhost:29092
+server:
+  port: 9000
