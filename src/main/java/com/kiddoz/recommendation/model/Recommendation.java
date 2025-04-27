@@ -19,7 +19,7 @@ public class Recommendation {
     @Column
     private String title;
 
-    @Column
+    @Column(length = 2000)
     private String description;
 
     @Column

@@ -22,11 +22,11 @@ public class Specialist extends ApplicationUser {
     @Column
     private String quote;
 
-    @Column
+    @Column(length = 2000)
     private String image;
 
 
-    @Column
+    @Column(length = 2000)
     private String description;
 
 
