@@ -32,8 +32,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 
-    implementation 'org.nd4j:nd4j-native:1.0.0-M2.1:windows-x86_64'
-//  pt docker comenteaza linia cu windows si decomenteaza cea cu linux
+    implementation group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-M2.1'
+    implementation 'org.deeplearning4j:deeplearning4j-core:1.0.0-M2.1'
 //    implementation 'org.nd4j:nd4j-native:1.0.0-M2.1:linux-x86_64'
     implementation 'org.deeplearning4j:deeplearning4j-modelimport:1.0.0-M2.1'
 
@@ -44,4 +44,11 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootRun {
+    jvmArgs = [
+            "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+    ]
+    args = ["--spring.profiles.active=local"]
 }

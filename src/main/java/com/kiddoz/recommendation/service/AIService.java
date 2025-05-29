@@ -1,5 +1,6 @@
 package com.kiddoz.recommendation.service;
 
+import jakarta.annotation.PostConstruct;
 import org.deeplearning4j.nn.modelimport.keras.KerasModelImport;
 import org.deeplearning4j.nn.modelimport.keras.exceptions.InvalidKerasConfigurationException;
 import org.deeplearning4j.nn.modelimport.keras.exceptions.UnsupportedKerasConfigurationException;
@@ -24,15 +25,22 @@ public class AIService {
     private MultiLayerNetwork model;
     private INDArray features;
 
-    @Autowired
-    public AIService(@Value("${model.path}") String path) {
+    @Value("${model.path}")
+    private String path;
+
+    @PostConstruct
+    public void init() {
         try {
             modelPath = path;
             loadModel();
+            logger.info("Model loaded successfully.");
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("Failed to load model in AIService PostConstruct", ex);
+            // Do not rethrow — allow Spring to continue
         }
     }
+
+
 
     public void loadModel() throws IOException, UnsupportedKerasConfigurationException, InvalidKerasConfigurationException {
         ClassPathResource modelResource = new ClassPathResource(modelPath);

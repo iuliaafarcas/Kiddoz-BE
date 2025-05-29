@@ -23,4 +23,5 @@ public class ApplicationUser {
 
     @Column
     private String password;
+
 }

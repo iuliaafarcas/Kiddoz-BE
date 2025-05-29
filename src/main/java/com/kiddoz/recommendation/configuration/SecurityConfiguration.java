@@ -52,7 +52,7 @@ public class SecurityConfiguration {
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder encoder) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
                 .userDetailsService(
-                        username -> userDetailsService.loadUserByUsername(username)
+                        userDetailsService
                 )
                 .passwordEncoder(encoder)
                 .and().build();

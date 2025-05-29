@@ -6,7 +6,7 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 
   datasource:
     url: jdbc:postgresql://kiddozdb.postgres.database.azure.com:5432/recommendationDB
@@ -21,9 +21,10 @@ spring:
 
 logging:
   level:
+    com.kiddoz.recommendation.security.JwtTokenFilter: DEBUG
     org:
       hibernate:
-        SQL: DEBUG
+        SQL: OFF
         type:
           descriptor:
             sql:
