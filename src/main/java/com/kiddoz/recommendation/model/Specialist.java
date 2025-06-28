@@ -22,8 +22,6 @@ public class Specialist extends ApplicationUser {
     @Column
     private String quote;
 
-    @Column(length = 2000)
-    private String image;
 
 
     @Column(length = 2000)
@@ -43,12 +41,11 @@ public class Specialist extends ApplicationUser {
     public Specialist(Integer id, String name, String email, String password, String description,
                       String occupation, String quote, DomainCategory domain, String image,
                       List<DomainInterest> domainsInterest, Date birthday) {
-        super(id, name, email, password);
+        super(id, name, email, password, image);
         this.description = description;
         this.occupation = occupation;
         this.quote = quote;
         this.domain = domain;
-        this.image = image;
         this.domainsInterest = domainsInterest;
         this.birthday = birthday;
     }

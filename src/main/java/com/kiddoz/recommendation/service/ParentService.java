@@ -21,7 +21,7 @@ public class ParentService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         var parent = applicationUserRepository.findApplicationUserByEmail(email);
         if (parent != null) throw new RuntimeException("User already has an account!");
-        Parent newParent = new Parent(null, name, email, bCryptPasswordEncoder.encode(password));
+        Parent newParent = new Parent(null, name, email, bCryptPasswordEncoder.encode(password), null);
         return applicationUserRepository.save(newParent);
     }
 

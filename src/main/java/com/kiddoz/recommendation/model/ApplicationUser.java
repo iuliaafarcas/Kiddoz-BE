@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ApplicationUser {
+public class  ApplicationUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -23,5 +23,8 @@ public class ApplicationUser {
 
     @Column
     private String password;
+
+    @Column(length = 2000)
+    private String image;
 
 }
